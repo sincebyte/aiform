@@ -65,15 +65,6 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
     field_prompts = {f.name: f.prompt for f in req.fields if f.prompt}
     logger.info("fields received: %s", [{f.name: f.prompt} for f in req.fields])
 
-    field_prompt_instructions = ""
-    if field_prompts:
-        lines = [f"  - {name}: {text}" for name, text in field_prompts.items()]
-        field_prompt_instructions = (
-            "6. 必须严格遵循字段级提示词（field_prompts），其中包含各字段的计算规则和格式要求：\n"
-            + "\n".join(lines)
-            + "\n"
-        )
-
     sys = SystemMessage(
         content=(
             "你是表单智能填充助手。你必须结合：当前用户 id、用户已填字段、"
@@ -84,8 +75,7 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
             "3. 对历史记录中的模式（常用措辞、日期格式、标签风格等）保持一致。\n"
             "4. 无法可靠推断的字段可省略或置为 null。\n"
             "5. 响应要快：不要做冗长推理，直接给结论。\n"
-            + field_prompt_instructions
-            + f"约定 JSON 示例（形状必须一致）：\n{EXAMPLE_RESPONSE}\n"
+            f"约定 JSON 示例（形状必须一致）：\n{EXAMPLE_RESPONSE}\n"
             f"本次字段示例（键集合应对齐表单）：\n{_example_for_fields(field_names)}\n"
         )
     )
