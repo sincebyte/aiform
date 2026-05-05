@@ -1,0 +1,7 @@
+{
+  "work-mysql-prod": {
+    "transport": "stdio",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-mysql"]
+  }
+}

@@ -1,0 +1,20 @@
+#+title: requirements
+#+subtitle: this is subtitle
+#+author: van
+#+date: <2026-05-02 21:47>
+#+SETUPFILE: ~/.doom.d/org-classic-head.setup
+
+实现ai自动填表单的工具，后端使用python langchain + mysql mcp。
+编写一个测试的demo。测试的数据库mcp使用：work-mysql-prod, 测试表使用：work_daily_papers
+
+前端支持html的表单数据。前端使用js原生开发。主要功能：
+1. 将js sdk加载至页面，通过sdk设置库名和表名，在设置自定义的提示词，设置当前登录用户id，设置绑定的html表单。
+2. sdk 带自动填充函数，调用函数执行：将表单字段，已经填写的值，库名、表明、提示词，组装成参数，调用接口。
+3. 接口返回json格式的数据，sdk可以识别json格式的数据将表单填充。
+4. 接口python后端使用 langchian 调用大模型 + mysql mcp 返回表单的预测数据，并填充至表单内。
+   预测表单数据遵循以下逻辑：
+   - 要根据当前登录用户的数据进行预测
+   - 要根据当前用户已经填写的字段进行预测
+   - 要根据当前用户在数据库中对应的最近10条记录，进行预测
+   - 要根据表单的字段，返回约定的json格式，这里需要给大模型指定返回数据的示例。确保前端能正确使用数据
+5. 预测步骤要少，这样才可以快速响应用户的请求。

@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
+<head>
+<!-- 2026-05-05 Tue 20:33 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aiform — AI 自动填表</title>
+<meta name="author" content="van" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script src  = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src  = "https://cdn.minexiot.com/file/ems/scroll.js"></script>
+<script src  = "https://cdn.minexiot.com/file/ems/tex-mml-chtml.js"></script>
+<link   href = "https://cdn.minexiot.com/file/ems/base.css" rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+<div id="preamble" class="status">
+<p>Made ✐︎ by 
+</div>
+<div id="content" class="content">
+<h1 class="title">Aiform — AI 自动填表
+<br />
+<span class="subtitle">this is subtitle</span>
+</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc335bcf">1. 简介</a></li>
+<li><a href="#org60be68e">2. 仓库结构</a></li>
+<li><a href="#orgf19d505">3. 环境要求</a></li>
+<li><a href="#orgad23547">4. 快速开始</a>
+<ul>
+<li><a href="#org90c6fc4">4.1. 1. 安装依赖</a></li>
+<li><a href="#orgb8aa198">4.2. 2. 配置环境变量</a></li>
+<li><a href="#org04ccaee">4.3. 3. 启动服务</a></li>
+<li><a href="#orgc1382e0">4.4. 4. 打开演示</a></li>
+</ul>
+</li>
+<li><a href="#org47e6a90">5. HTTP API</a>
+<ul>
+<li><a href="#orgab93b13">5.1. <code>POST /api/v1/predict</code></a></li>
+</ul>
+</li>
+<li><a href="#org7e06f7d">6. 前端 SDK</a></li>
+<li><a href="#org00e183b">7. MCP 配置说明</a></li>
+<li><a href="#org1aac6a4">8. 预测逻辑摘要（后端）</a></li>
+<li><a href="#org21a7e0d">9. 常见问题</a></li>
+<li><a href="#org63c646c">10. 许可与声明</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgc335bcf" class="outline-2">
+<h2 id="orgc335bcf"><span class="section-number-2">1.</span> 简介</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Aiform 是一套「HTML 表单 + 后端预测」的演示工程：<br />
+</p>
+
+<ul class="org-ul">
+<li>*前端*：原生 JavaScript SDK（=frontend/sdk/aiform-sdk.js=），绑定表单并调用接口。<br /></li>
+<li><b>后端*：FastAPI + LangChain（默认 *DeepSeek</b> OpenAI 兼容接口）+ MySQL 历史数据。<br /></li>
+<li>*数据*：优先通过 *MCP*（如 Cursor 中的 =work-mysql-prod=）执行查询；可选直连 MySQL 兜底。<br /></li>
+</ul>
+
+<p>
+预测流程刻意保持 <b>步骤少*：一次读取当前用户最近 10 条记录 + *一次</b> LLM 结构化输出。<br />
+</p>
+</div>
+</div>
+<div id="outline-container-org60be68e" class="outline-2">
+<h2 id="org60be68e"><span class="section-number-2">2.</span> 仓库结构</h2>
+<div class="outline-text-2" id="text-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">路径</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>backend/app</code></td>
+<td class="org-left">FastAPI、预测逻辑、历史查询</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>frontend/sdk/aiform-sdk.js</code></td>
+<td class="org-left">浏览器 SDK</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>frontend/demo/index.html</code></td>
+<td class="org-left">演示页</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>requirements.org</code></td>
+<td class="org-left">原始需求</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>mcp_connections.example.json</code></td>
+<td class="org-left">MCP 连接配置示例</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgf19d505" class="outline-2">
+<h2 id="orgf19d505"><span class="section-number-2">3.</span> 环境要求</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>*Python*：建议 3.12（与已验证依赖一致；3.10+ 一般亦可）。<br /></li>
+<li>*DeepSeek API Key*：默认走 =<a href="https://api.deepseek.com/v1=%EF%BC%8C%E6%A8%A1%E5%9E%8B%E9%BB%98%E8%AE%A4">https://api.deepseek.com/v1=%EF%BC%8C%E6%A8%A1%E5%9E%8B%E9%BB%98%E8%AE%A4</a> =deepseek-chat=。亦可改用官方 OpenAI（见下表）。<br /></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgad23547" class="outline-2">
+<h2 id="orgad23547"><span class="section-number-2">4.</span> 快速开始</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org90c6fc4" class="outline-3">
+<h3 id="org90c6fc4"><span class="section-number-3">4.1.</span> 1. 安装依赖</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-bash"><code><span style="color: #cd9575;">cd</span> backend
+python3.12 -m venv .venv
+source .venv/bin/activate   <span style="color: #545c5e;"># </span><span style="color: #545c5e;">Windows: .venv\Scripts\activate
+</span>pip install -r requirements.txt
+</code></pre>
+</div>
+
+<p>
+若环境中有 HTTP 代理导致 pip 失败，可先取消代理再安装：<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><code>unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
+pip install -r requirements.txt
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb8aa198" class="outline-3">
+<h3 id="orgb8aa198"><span class="section-number-3">4.2.</span> 2. 配置环境变量</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+复制示例文件并编辑：<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><code><span style="color: #cd9575;">cp</span> backend/.env.example backend/.env
+</code></pre>
+</div>
+
+<p>
+必填项示例：<br />
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">变量</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>DEEPSEEK_API_KEY</code> 或 <code>OPENAI_API_KEY</code></td>
+<td class="org-left">大模型密钥（二者任一）</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>DEEPSEEK_MODEL</code> 或 <code>OPENAI_MODEL</code></td>
+<td class="org-left">默认 <code>deepseek-chat</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>DEEPSEEK_BASE_URL</code> 或 <code>OPENAI_BASE_URL</code></td>
+<td class="org-left">默认 <code>https://api.deepseek.com/v1=；用 OpenAI 时设为 =https://api.openai.com/v1</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+历史数据（二选一或同时配置，MCP 优先）：<br />
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">变量</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>MCP_CONNECTIONS_JSON</code></td>
+<td class="org-left">MCP <code>connections</code> JSON 文件的*绝对路径*</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>MCP_MYSQL_SERVER_NAME</code></td>
+<td class="org-left">JSON 中的服务器键名，默认 <code>work-mysql-prod</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>MCP_SQL_TOOL_NAME</code></td>
+<td class="org-left">可选，固定使用的 SQL 工具名</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>MCP_SQL_QUERY_PARAM</code></td>
+<td class="org-left">调用工具时传入 SQL 的参数名，默认 <code>query</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>MYSQL_HOST</code> / <code>MYSQL_USER</code> / <code>MYSQL_PASSWORD</code></td>
+<td class="org-left">直连 MySQL 时使用</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org04ccaee" class="outline-3">
+<h3 id="org04ccaee"><span class="section-number-3">4.3.</span> 3. 启动服务</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre class="src src-bash"><code><span style="color: #cd9575;">cd</span> backend
+source .venv/bin/activate
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc1382e0" class="outline-3">
+<h3 id="orgc1382e0"><span class="section-number-3">4.4.</span> 4. 打开演示</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+浏览器访问：<a href="http://127.0.0.1:8000/demo">http://127.0.0.1:8000/demo</a><br />
+</p>
+
+<p>
+SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.0.0.1:8000/sdk/aiform-sdk.js</a><br />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org47e6a90" class="outline-2">
+<h2 id="org47e6a90"><span class="section-number-2">5.</span> HTTP API</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgab93b13" class="outline-3">
+<h3 id="orgab93b13"><span class="section-number-3">5.1.</span> <code>POST /api/v1/predict</code></h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+请求体（JSON）主要字段：<br />
+</p>
+
+<dl class="org-dl">
+<dt><code>database</code></dt><dd>数据库名<br /></dd>
+<dt><code>table</code></dt><dd>表名（演示默认 =work_daily_papers=）<br /></dd>
+<dt><code>user_id</code></dt><dd>当前登录用户标识<br /></dd>
+<dt><code>user_id_column</code></dt><dd>表中用户列名，默认 <code>user_id</code><br /></dd>
+<dt><code>order_by_column</code></dt><dd>排序列（DESC），用于取「最近」记录，默认 <code>id</code><br /></dd>
+<dt><code>custom_prompt</code></dt><dd>业务自定义提示<br /></dd>
+<dt><code>fields</code></dt><dd>表单字段列表（=name=、=tag=、=type= 等）<br /></dd>
+<dt><code>current_values</code></dt><dd>已填写字段键值对<br /></dd>
+</dl>
+
+<p>
+响应（JSON）：<br />
+</p>
+
+<dl class="org-dl">
+<dt><code>fields</code></dt><dd>模型建议填入的值（不会重复覆盖请求里已非空的字段）<br /></dd>
+<dt><code>meta</code></dt><dd>如历史条数、数据来源（=mcp= / <code>mysql_direct</code> / =none=）<br /></dd>
+</dl>
+</div>
+</div>
+</div>
+<div id="outline-container-org7e06f7d" class="outline-2">
+<h2 id="org7e06f7d"><span class="section-number-2">6.</span> 前端 SDK</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+在页面中引入（需与后端同源或通过 CORS 访问 API）：<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html"><code>&lt;<span style="color: #80bcb6;">script</span> <span style="color: #968cc7;">src</span>=<span style="color: #6fb593;">"/sdk/aiform-sdk.js"</span>&gt;&lt;/<span style="color: #80bcb6;">script</span>&gt;
+</code></pre>
+</div>
+
+<p>
+初始化与填充示例：<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><code>Aiform.init<span style="color: #6bd9db;">(</span><span style="color: #ab98b5;">{</span>
+  apiBase: <span style="color: #6fb593;">"http://127.0.0.1:8000"</span>,
+  database: <span style="color: #6fb593;">"your_database"</span>,
+  table: <span style="color: #6fb593;">"work_daily_papers"</span>,
+  userId: <span style="color: #6fb593;">"demo-user-1"</span>,
+  userIdColumn: <span style="color: #6fb593;">"user_id"</span>,
+  orderByColumn: <span style="color: #6fb593;">"id"</span>,
+  customPrompt: <span style="color: #6fb593;">"&#26085;&#25253;&#34920;&#21333;&#65292;&#35821;&#27668;&#31616;&#27905;&#27491;&#24335;&#12290;"</span>,
+  form: <span style="color: #6fb593;">"#paper-form"</span>,   <span style="color: #545c5e;">// </span><span style="color: #545c5e;">&#25110; document.getElementById("paper-form")
+</span><span style="color: #ab98b5;">}</span><span style="color: #6bd9db;">)</span>;
+
+<span style="color: #4d9391;">await</span> Aiform.fill<span style="color: #6bd9db;">()</span>;     <span style="color: #545c5e;">// </span><span style="color: #545c5e;">&#35831;&#27714;&#25509;&#21475;&#24182;&#20889;&#20837;&#34920;&#21333;
+</span><span style="color: #545c5e;">// </span><span style="color: #545c5e;">Aiform.autoFill()     // &#21035;&#21517;
+</span><span style="color: #545c5e;">// </span><span style="color: #545c5e;">Aiform.applyResponse(data)  // &#20165;&#24212;&#29992;&#24050;&#26377; JSON</span>
+</code></pre>
+</div>
+
+<p>
+可选：在演示页通过全局变量覆盖 API 根路径：<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><code>window.AIFORM_API_BASE = <span style="color: #6fb593;">"http://127.0.0.1:8000"</span>;
+</code></pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org00e183b" class="outline-2">
+<h2 id="org00e183b"><span class="section-number-2">7.</span> MCP 配置说明</h2>
+<div class="outline-text-2" id="text-7">
+<ol class="org-ol">
+<li>参考仓库根目录 <code>mcp_connections.example.json=，按本机 MySQL MCP 启动方式填写 =command</code> / =args=（或其它 transport）。<br /></li>
+<li>将生成文件的 <b>绝对路径</b> 写入 =MCP_CONNECTIONS_JSON=。<br /></li>
+<li>JSON 顶层的键必须与 <code>MCP_MYSQL_SERVER_NAME</code> 一致（默认 =work-mysql-prod=）。<br /></li>
+</ol>
+
+<p>
+若 MCP 工具参数名与默认不符，请设置 <code>MCP_SQL_QUERY_PARAM</code> 或 =MCP_SQL_TOOL_NAME=。<br />
+</p>
+</div>
+</div>
+<div id="outline-container-org1aac6a4" class="outline-2">
+<h2 id="org1aac6a4"><span class="section-number-2">8.</span> 预测逻辑摘要（后端）</h2>
+<div class="outline-text-2" id="text-8">
+<ol class="org-ol">
+<li>根据 <code>user_id</code> 与 <code>user_id_column=，查询该用户在 =database.table</code> 中最近至多 <b>10</b> 条记录。<br /></li>
+<li>将「用户 id、已填字段、历史记录、表单字段列表、自定义提示」组装为 <b>单次</b> LLM 调用上下文。<br /></li>
+<li>使用结构化输出，强制返回与前端约定的 <code>fields</code> 对象形状。<br /></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org21a7e0d" class="outline-2">
+<h2 id="org21a7e0d"><span class="section-number-2">9.</span> 常见问题</h2>
+<div class="outline-text-2" id="text-9">
+<dl class="org-dl">
+<dt><b>演示页跨域</b></dt><dd>若静态页不在 uvicorn 同一端口，需配置 =CORS_ORIGINS=（逗号分隔）或使用反向代理同源。<br /></dd>
+<dt><b>历史记录为空</b></dt><dd>检查 MCP 是否可达、SQL 工具参数名、或直连 =MYSQL_*=；确认表中确有该 =user_id=。<br /></dd>
+<dt><b>模型报错</b></dt><dd>确认 =DEEPSEEK_API_KEY=（或 =OPENAI_API_KEY=）及 Base URL；DeepSeek 密钥见 <a href="https://platform.deepseek.com/">DeepSeek 开放平台</a>。<br /></dd>
+</dl>
+</div>
+</div>
+<div id="outline-container-org63c646c" class="outline-2">
+<h2 id="org63c646c"><span class="section-number-2">10.</span> 许可与声明</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+演示代码仅供学习与联调；生产环境请自行加固鉴权、SQL 注入防护与密钥管理。<br />
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2026-05-03 Sun 08:35</p>
+<p class="author">Author: van</p>
+<p class="date">Created: 2026-05-05 Tue 20:33</p>
+</div>
+</body>
+</html>

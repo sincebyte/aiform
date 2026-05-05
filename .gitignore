@@ -1,0 +1,7 @@
+/.agent-shell/
+backend/.venv/
+__pycache__/
+*.py[cod]
+backend/.env
+.tmp_npm
+backend/mcp_connections.json

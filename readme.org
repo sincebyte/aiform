@@ -1,0 +1,167 @@
+#+title: Aiform — AI 自动填表
+#+language: zh
+#+subtitle: this is subtitle
+#+author: van
+#+date: <2026-05-03 08:35>
+#+SETUPFILE: ~/.doom.d/org-classic-head.setup
+
+
+* 简介
+
+Aiform 是一套「HTML 表单 + 后端预测」的演示工程：
+
+- *前端*：原生 JavaScript SDK（=frontend/sdk/aiform-sdk.js=），绑定表单并调用接口。
+- *后端*：FastAPI + LangChain（默认 *DeepSeek* OpenAI 兼容接口）+ MySQL 历史数据。
+- *数据*：优先通过 *MCP*（如 Cursor 中的 =work-mysql-prod=）执行查询；可选直连 MySQL 兜底。
+
+预测流程刻意保持 *步骤少*：一次读取当前用户最近 10 条记录 + *一次* LLM 结构化输出。
+
+* 仓库结构
+
+| 路径                           | 说明                        |
+|--------------------------------+-----------------------------|
+| =backend/app=                  | FastAPI、预测逻辑、历史查询 |
+| =frontend/sdk/aiform-sdk.js=   | 浏览器 SDK                  |
+| =frontend/demo/index.html=     | 演示页                      |
+| =requirements.org=             | 原始需求                    |
+| =mcp_connections.example.json= | MCP 连接配置示例            |
+
+* 环境要求
+
+- *Python*：建议 3.12（与已验证依赖一致；3.10+ 一般亦可）。
+- *DeepSeek API Key*：默认走 =https://api.deepseek.com/v1=，模型默认 =deepseek-chat=。亦可改用官方 OpenAI（见下表）。
+
+* 快速开始
+
+** 1. 安装依赖
+
+#+begin_src bash
+cd backend
+python3.12 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+#+end_src
+
+若环境中有 HTTP 代理导致 pip 失败，可先取消代理再安装：
+
+#+begin_src bash
+unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
+pip install -r requirements.txt
+#+end_src
+
+** 2. 配置环境变量
+
+复制示例文件并编辑：
+
+#+begin_src bash
+cp backend/.env.example backend/.env
+#+end_src
+
+必填项示例：
+
+| 变量                                     | 说明                                                                             |
+|------------------------------------------+----------------------------------------------------------------------------------|
+| =DEEPSEEK_API_KEY= 或 =OPENAI_API_KEY=   | 大模型密钥（二者任一）                                                           |
+| =DEEPSEEK_MODEL= 或 =OPENAI_MODEL=       | 默认 =deepseek-chat=                                                             |
+| =DEEPSEEK_BASE_URL= 或 =OPENAI_BASE_URL= | 默认 =https://api.deepseek.com/v1=；用 OpenAI 时设为 =https://api.openai.com/v1= |
+
+历史数据（二选一或同时配置，MCP 优先）：
+
+| 变量                                           | 说明                                        |
+|------------------------------------------------+---------------------------------------------|
+| =MCP_CONNECTIONS_JSON=                         | MCP =connections= JSON 文件的*绝对路径*     |
+| =MCP_MYSQL_SERVER_NAME=                        | JSON 中的服务器键名，默认 =work-mysql-prod= |
+| =MCP_SQL_TOOL_NAME=                            | 可选，固定使用的 SQL 工具名                 |
+| =MCP_SQL_QUERY_PARAM=                          | 调用工具时传入 SQL 的参数名，默认 =query=   |
+| =MYSQL_HOST= / =MYSQL_USER= / =MYSQL_PASSWORD= | 直连 MySQL 时使用                           |
+
+** 3. 启动服务
+
+#+begin_src bash
+cd backend
+source .venv/bin/activate.fish
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+#+end_src
+
+** 4. 打开演示
+
+浏览器访问：[[http://127.0.0.1:8000/demo][http://127.0.0.1:8000/demo]]
+
+SDK 静态地址：[[http://127.0.0.1:8000/sdk/aiform-sdk.js][http://127.0.0.1:8000/sdk/aiform-sdk.js]]
+
+* HTTP API
+
+** =POST /api/v1/predict=
+
+请求体（JSON）主要字段：
+
+- =database= :: 数据库名
+- =table= :: 表名（演示默认 =work_daily_papers=）
+- =user_id= :: 当前登录用户标识
+- =user_id_column= :: 表中用户列名，默认 =user_id=
+- =order_by_column= :: 排序列（DESC），用于取「最近」记录，默认 =id=
+- =custom_prompt= :: 业务自定义提示
+- =fields= :: 表单字段列表（=name=、=tag=、=type= 等）
+- =current_values= :: 已填写字段键值对
+
+响应（JSON）：
+
+- =fields= :: 模型建议填入的值（不会重复覆盖请求里已非空的字段）
+- =meta= :: 如历史条数、数据来源（=mcp= / =mysql_direct= / =none=）
+
+* 前端 SDK
+
+在页面中引入（需与后端同源或通过 CORS 访问 API）：
+
+#+begin_src html
+<script src="/sdk/aiform-sdk.js"></script>
+#+end_src
+
+初始化与填充示例：
+
+#+begin_src javascript
+Aiform.init({
+  apiBase: "http://127.0.0.1:8000",
+  database: "your_database",
+  table: "work_daily_papers",
+  userId: "demo-user-1",
+  userIdColumn: "user_id",
+  orderByColumn: "id",
+  customPrompt: "日报表单，语气简洁正式。",
+  form: "#paper-form",   // 或 document.getElementById("paper-form")
+});
+
+await Aiform.fill();     // 请求接口并写入表单
+// Aiform.autoFill()     // 别名
+// Aiform.applyResponse(data)  // 仅应用已有 JSON
+#+end_src
+
+可选：在演示页通过全局变量覆盖 API 根路径：
+
+#+begin_src javascript
+window.AIFORM_API_BASE = "http://127.0.0.1:8000";
+#+end_src
+
+* MCP 配置说明
+
+1. 参考仓库根目录 =mcp_connections.example.json=，按本机 MySQL MCP 启动方式填写 =command= / =args=（或其它 transport）。
+2. 将生成文件的 *绝对路径* 写入 =MCP_CONNECTIONS_JSON=。
+3. JSON 顶层的键必须与 =MCP_MYSQL_SERVER_NAME= 一致（默认 =work-mysql-prod=）。
+
+若 MCP 工具参数名与默认不符，请设置 =MCP_SQL_QUERY_PARAM= 或 =MCP_SQL_TOOL_NAME=。
+
+* 预测逻辑摘要（后端）
+
+1. 根据 =user_id= 与 =user_id_column=，查询该用户在 =database.table= 中最近至多 *10* 条记录。
+2. 将「用户 id、已填字段、历史记录、表单字段列表、自定义提示」组装为 *单次* LLM 调用上下文。
+3. 使用结构化输出，强制返回与前端约定的 =fields= 对象形状。
+
+* 常见问题
+
+- *演示页跨域* :: 若静态页不在 uvicorn 同一端口，需配置 =CORS_ORIGINS=（逗号分隔）或使用反向代理同源。
+- *历史记录为空* :: 检查 MCP 是否可达、SQL 工具参数名、或直连 =MYSQL_*=；确认表中确有该 =user_id=。
+- *模型报错* :: 确认 =DEEPSEEK_API_KEY=（或 =OPENAI_API_KEY=）及 Base URL；DeepSeek 密钥见 [[https://platform.deepseek.com/][DeepSeek 开放平台]]。
+
+* 许可与声明
+
+演示代码仅供学习与联调；生产环境请自行加固鉴权、SQL 注入防护与密钥管理。

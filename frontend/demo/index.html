@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aiform Demo — work_daily_papers</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    label { display: block; margin-top: 0.75rem; font-weight: 600; }
+    input, textarea, select { width: 100%; box-sizing: border-box; margin-top: 0.25rem; padding: 0.5rem; }
+    textarea { min-height: 100px; }
+    button { margin-top: 1.25rem; padding: 0.6rem 1.2rem; cursor: pointer; }
+    .hint { color: #555; font-size: 0.9rem; margin-top: 1rem; }
+    #status { margin-top: 1rem; white-space: pre-wrap; font-size: 0.85rem; }
+    .err { color: #b00020; }
+    .ok { color: #0a0; }
+  </style>
+</head>
+<body>
+  <h1>Aiform 演示</h1>
+  <p class="hint">
+    后端默认 <code>http://127.0.0.1:8000</code>。请先配置 <code>OPENAI_API_KEY</code>，
+    以及 MCP（<code>MCP_CONNECTIONS_JSON</code>）或直连 MySQL（<code>MYSQL_*</code>）以拉取历史记录。
+    测试表：<strong>work_daily_papers</strong>（字段名可按你真实表结构调整）。
+  </p>
+
+  <label for="created_by">当前登录用户</label>
+  <input id="created_by" type="text" value="272" />
+
+  <form id="paper-form">
+    <label for="depart_name">项目部</label>
+    <input id="depart_name" name="depart_name" type="text" placeholder="可先留空，由 AI 填充" data-prompt="" />
+
+    <label for="plan_start_time">计划开始时间</label>
+    <input id="plan_start_time" name="plan_start_time" type="text" placeholder="可先留空，由 AI 填充" data-prompt="计划开始时间，日期格式 YYYY-MM-DD hh:mm:ss，取历史记录中plan_end_time最大值的后一天的上午9点" />
+
+    <label for="plan_end_time">计划结束时间</label>
+    <input id="plan_end_time" name="plan_end_time" type="text" placeholder="可先留空，由 AI 填充" data-prompt="日期格式 YYYY-MM-DD hh:mm:ss，取 plan_start_time 当天的下午6点" />
+
+    <label for="leader">负责人</label>
+    <input id="leader" name="leader" type="text" placeholder="可先留空，由 AI 填充" data-prompt="取第一个leader值" />
+
+    <label for="phone">负责人电话</label>
+    <input id="phone" name="phone" type="text" placeholder="可先留空，由 AI 填充" data-prompt="取第一个leader值对应的phone" />
+
+    <button type="button" id="btn-fill">AI 自动填充</button>
+  </form>
+
+  <div id="status"></div>
+
+  <!-- 与 FastAPI 挂载路径一致：/sdk/aiform-sdk.js -->
+  <script src="/sdk/aiform-sdk.js?v=2"></script>
+  <script>
+    (function () {
+      var apiBase = window.AIFORM_API_BASE || "http://127.0.0.1:8000";
+      var statusEl = document.getElementById("status");
+
+      document.getElementById("btn-fill").addEventListener("click", async function () {
+        var uid = document.getElementById("created_by").value.trim() || "272";
+        Aiform.init({
+          apiBase: apiBase,
+          database: "minex-pms",
+          table: "work_daily_papers",
+          userId: uid,
+          userIdColumn: "created_by",
+          orderByColumn: "id",
+          customPrompt: "这是工作日报表单；语气正式简洁；日期用 YYYY-MM-DD。",
+          form: "#paper-form",
+        });
+        statusEl.textContent = "请求中…";
+        statusEl.className = "";
+        try {
+          var data = await Aiform.fill();
+          statusEl.className = "ok";
+          statusEl.textContent =
+            "完成。meta = " + JSON.stringify(data.meta || {}, null, 2);
+        } catch (e) {
+          statusEl.className = "err";
+          statusEl.textContent = String(e.message || e);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
