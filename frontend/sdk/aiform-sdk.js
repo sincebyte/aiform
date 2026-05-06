@@ -16,6 +16,7 @@
     limit: 10,
     form: null,
     excludeFields: [],
+    onProgress: null,
   };
 
   function resolveForm(el) {
@@ -172,6 +173,7 @@
       cfg.customPrompt = opts.customPrompt || "";
       cfg.limit = opts.limit != null ? Number(opts.limit) : 10;
       cfg.form = resolveForm(opts.form);
+      cfg.onProgress = opts.onProgress || null;
       var ex = opts.excludeFields || [];
       if (!Array.isArray(ex)) ex = String(ex).split(",").map(function (s) { return s.trim(); });
       cfg.excludeFields = ex;
@@ -209,19 +211,46 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      var text = await res.text();
-      var data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        throw new Error("Aiform: 响应非 JSON — " + text.slice(0, 200));
-      }
       if (!res.ok) {
-        var detail = data.detail != null ? JSON.stringify(data.detail) : text;
-        throw new Error("Aiform: HTTP " + res.status + " " + detail);
+        var errText = await res.text();
+        throw new Error("Aiform: HTTP " + res.status + " " + errText.slice(0, 200));
       }
-      if (data.fields) applyFields(cfg.form, data.fields);
-      return data;
+
+      var reader = res.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = "";
+      var result = null;
+
+      while (true) {
+        var r = await reader.read();
+        if (r.done) break;
+        buffer += decoder.decode(r.value, { stream: true });
+        var lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          if (line.indexOf("data: ") !== 0) continue;
+          var jsonStr = line.slice(6);
+          var event;
+          try {
+            event = JSON.parse(jsonStr);
+          } catch (e) {
+            console.warn("[Aiform] SSE 解析失败:", jsonStr);
+            continue;
+          }
+          if (event.type === "stage" && typeof cfg.onProgress === "function") {
+            cfg.onProgress(event.stage, event.message);
+          } else if (event.type === "result") {
+            result = event.data;
+          } else if (event.type === "error") {
+            throw new Error(event.message || "未知错误");
+          }
+        }
+      }
+
+      if (!result) throw new Error("Aiform: 未收到预测结果");
+      if (result.fields) applyFields(cfg.form, result.fields);
+      return result;
     },
 
     /** fill 的别名 */

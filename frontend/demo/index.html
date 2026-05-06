@@ -14,6 +14,21 @@
     #status { margin-top: 1rem; white-space: pre-wrap; font-size: 0.85rem; }
     .err { color: #b00020; }
     .ok { color: #0a0; }
+    #status .dot-anim::after {
+      display: inline-block;
+      vertical-align: bottom;
+      animation: dots 1.5s steps(4, end) infinite;
+      overflow: hidden;
+      width: 0;
+      content: '...';
+    }
+    @keyframes dots {
+      0%   { width: 0; }
+      25%  { width: 1ch; }
+      50%  { width: 2ch; }
+      75%  { width: 3ch; }
+      100% { width: 3ch; }
+    }
   </style>
 </head>
 <body>
@@ -67,8 +82,11 @@
           orderByColumn: "id",
           customPrompt: "这是工作日报表单；语气正式简洁；日期用 YYYY-MM-DD。",
           form: "#paper-form",
+          onProgress: function (stage, message) {
+            statusEl.innerHTML = message + '<span class="dot-anim"></span>';
+            statusEl.className = "";
+          },
         });
-        statusEl.textContent = "请求中…";
         statusEl.className = "";
         try {
           var data = await Aiform.fill();

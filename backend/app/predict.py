@@ -73,8 +73,19 @@ def _predict_llm(model: str, base_url: str, api_key: str) -> ChatOpenAI:
 
 
 async def predict_form(settings: Settings, req: PredictRequest) -> PredictResponse:
+    result = None
+    async for event in _predict_stream(settings, req):
+        if event["type"] == "result":
+            result = PredictResponse(**event["data"])
+    if result is None:
+        raise RuntimeError("predict_stream 未产生结果")
+    return result
+
+
+async def _predict_stream(settings: Settings, req: PredictRequest):
     t0 = time.perf_counter()
     field_names = [f.name for f in req.fields]
+    yield {"type": "stage", "stage": "mcp", "message": "MCP 查询中"}
     history, source = await fetch_user_recent_rows(
         settings,
         database=req.database,
@@ -133,6 +144,8 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         raise RuntimeError("服务端未配置 DEEPSEEK_API_KEY（或 OPENAI_API_KEY）")
 
 
+    yield {"type": "stage", "stage": "llm", "message": "模型调用中"}
+
     llm = _predict_llm(
         settings.openai_model,
         settings.openai_base_url or "",
@@ -169,10 +182,13 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         time.perf_counter() - t0,
     )
 
-    return PredictResponse(
-        fields=merged,
-        meta={
-            "history_rows": len(history),
-            "history_source": source,
-        },
-    )
+    yield {
+        "type": "result",
+        "data": PredictResponse(
+            fields=merged,
+            meta={
+                "history_rows": len(history),
+                "history_source": source,
+            },
+        ).model_dump(),
+    }

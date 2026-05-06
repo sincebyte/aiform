@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
+import json
 import logging
-import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
-from app.models import PredictRequest, PredictResponse
-from app.predict import predict_form
+from app.models import PredictRequest
+from app.predict import _predict_stream
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -53,23 +53,29 @@ app.add_middleware(
 )
 
 
-@app.post("/api/v1/predict", response_model=PredictResponse)
-async def api_predict(body: PredictRequest) -> PredictResponse:
-    t_wall = time.perf_counter()
-    try:
-        return await predict_form(_settings, body)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-    except RuntimeError as e:
-        raise HTTPException(status_code=503, detail=str(e)) from e
-    except Exception as e:
-        logger.exception("predict failed")
-        raise HTTPException(status_code=500, detail=str(e)) from e
-    finally:
-        logger.info(
-            "POST /api/v1/predict 从进入到结束总耗时 %.3fs",
-            time.perf_counter() - t_wall,
-        )
+@app.post("/api/v1/predict")
+async def api_predict(body: PredictRequest):
+    async def event_stream():
+        try:
+            async for event in _predict_stream(_settings, body):
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+        except ValueError as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)}, ensure_ascii=False)}\n\n"
+        except RuntimeError as e:
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)}, ensure_ascii=False)}\n\n"
+        except Exception as e:
+            logger.exception("predict failed")
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)}, ensure_ascii=False)}\n\n"
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 if FRONTEND.is_dir():
