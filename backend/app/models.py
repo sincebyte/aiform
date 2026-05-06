@@ -22,6 +22,7 @@ class PredictRequest(BaseModel):
         default="id",
         description="用于取最近记录的排序列（DESC），需为可排序列",
     )
+    limit: int = Field(default=10, description="查询最近历史记录条数", ge=1, le=100)
     custom_prompt: str = Field(default="", description="业务侧自定义提示")
     fields: list[FormFieldSpec] = Field(description="表单字段元数据")
     current_values: dict[str, Any] = Field(

@@ -82,7 +82,7 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         user_column=req.user_id_column,
         user_id=req.user_id,
         order_column=req.order_by_column,
-        limit=3,
+        limit=req.limit,
         columns=field_names,
     )
     t1 = time.perf_counter()
@@ -99,7 +99,7 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
     sys = SystemMessage(
         content=(
             "你是表单智能填充助手。你必须结合：当前用户 id、用户已填字段、"
-            "该用户在数据库中的最近至多 10 条历史记录，推断空字段的合理取值。\n"
+            "该用户在数据库中的最近历史记录，推断空字段的合理取值。\n"
             "规则：\n"
             "1. 输出必须是结构化对象，且仅包含字段「fields」：name -> 字符串或 null。\n"
             "2. 用户已在表单中填写且非空的字段：不要改动（不要在 fields 里重复输出它们）。\n"
@@ -112,14 +112,14 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
     )
 
     human_payload: dict[str, Any] = {
-        "login_user_id": req.user_id,
-        "database": req.database,
-        "table": req.table,
-        "form_field_names": field_names,
+        # "login_user_id": req.user_id,
+        # "database": req.database,
+        # "table": req.table,
+        # "form_field_names": field_names,
         "field_prompts": field_prompts or None,
         "current_values_non_empty": filled,
         "recent_rows_for_user": history,
-        "custom_prompt": req.custom_prompt or None,
+        # "custom_prompt": req.custom_prompt or None,
     }
     human = HumanMessage(
         content=(

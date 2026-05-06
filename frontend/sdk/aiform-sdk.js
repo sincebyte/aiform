@@ -13,6 +13,7 @@
     userIdColumn: "user_id",
     orderByColumn: "id",
     customPrompt: "",
+    limit: 10,
     form: null,
     excludeFields: [],
   };
@@ -156,6 +157,7 @@
      * @param {string} [opts.userIdColumn]
      * @param {string} [opts.orderByColumn]
      * @param {string} [opts.customPrompt]
+     * @param {number} [opts.limit] 查询最近历史记录条数，默认 10，范围 1–100
      * @param {string[]|string} [opts.excludeFields] 不参与预测的字段名列表（逗号分隔字符串或数组）；userIdColumn 自动排除
      * @param {HTMLFormElement|string} opts.form 表单元素或选择器
      */
@@ -168,6 +170,7 @@
       cfg.userIdColumn = opts.userIdColumn || "user_id";
       cfg.orderByColumn = opts.orderByColumn || "id";
       cfg.customPrompt = opts.customPrompt || "";
+      cfg.limit = opts.limit != null ? Number(opts.limit) : 10;
       cfg.form = resolveForm(opts.form);
       var ex = opts.excludeFields || [];
       if (!Array.isArray(ex)) ex = String(ex).split(",").map(function (s) { return s.trim(); });
@@ -193,6 +196,7 @@
         user_id: cfg.userId,
         user_id_column: cfg.userIdColumn,
         order_by_column: cfg.orderByColumn,
+        limit: cfg.limit,
         custom_prompt: cfg.customPrompt,
         fields: fields,
         current_values: currentValues(cfg.form),

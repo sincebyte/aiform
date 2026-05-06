@@ -25,11 +25,11 @@
   </p>
 
   <label for="created_by">当前登录用户</label>
-  <input id="created_by" type="text" value="272" />
+  <input id="created_by" type="text" value="2409" />
 
   <form id="paper-form">
     <label for="depart_name">项目部</label>
-    <input id="depart_name" name="depart_name" type="text" placeholder="可先留空，由 AI 填充" data-prompt="" />
+    <input id="depart_name" name="depart_name" type="text" placeholder="可先留空，由 AI 填充" data-prompt="取第一个depart_name值" />
 
     <label for="plan_start_time">计划开始时间</label>
     <input id="plan_start_time" name="plan_start_time" type="text" placeholder="可先留空，由 AI 填充" data-prompt="计划开始时间，日期格式 YYYY-MM-DD hh:mm:ss，取历史记录中plan_end_time最大值的后一天的上午9点" />
@@ -49,18 +49,19 @@
   <div id="status"></div>
 
   <!-- 与 FastAPI 挂载路径一致：/sdk/aiform-sdk.js -->
-  <script src="/sdk/aiform-sdk.js?v=2"></script>
+  <script src="/sdk/aiform-sdk.js?v=3"></script>
   <script>
     (function () {
       var apiBase = window.AIFORM_API_BASE || "http://127.0.0.1:8000";
       var statusEl = document.getElementById("status");
 
       document.getElementById("btn-fill").addEventListener("click", async function () {
-        var uid = document.getElementById("created_by").value.trim() || "272";
+        var uid = document.getElementById("created_by").value.trim() || "2409";
         Aiform.init({
           apiBase: apiBase,
           database: "minex-pms",
           table: "work_daily_papers",
+          limit: 1,
           userId: uid,
           userIdColumn: "created_by",
           orderByColumn: "id",
