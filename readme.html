@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh" xml:lang="zh">
 <head>
-<!-- 2026-05-05 Tue 20:33 -->
+<!-- 2026-05-06 Wed 13:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Aiform — AI 自动填表</title>
@@ -212,32 +212,32 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc335bcf">1. 简介</a></li>
-<li><a href="#org60be68e">2. 仓库结构</a></li>
-<li><a href="#orgf19d505">3. 环境要求</a></li>
-<li><a href="#orgad23547">4. 快速开始</a>
+<li><a href="#orgf4431d0">1. 简介</a></li>
+<li><a href="#orgbef820c">2. 仓库结构</a></li>
+<li><a href="#org3bb5a99">3. 环境要求</a></li>
+<li><a href="#orgb05889b">4. 快速开始</a>
 <ul>
-<li><a href="#org90c6fc4">4.1. 1. 安装依赖</a></li>
-<li><a href="#orgb8aa198">4.2. 2. 配置环境变量</a></li>
-<li><a href="#org04ccaee">4.3. 3. 启动服务</a></li>
-<li><a href="#orgc1382e0">4.4. 4. 打开演示</a></li>
+<li><a href="#orgd1b0dec">4.1. 1. 安装依赖</a></li>
+<li><a href="#orgb57bd03">4.2. 2. 配置环境变量</a></li>
+<li><a href="#orgaac2d9e">4.3. 3. 启动服务</a></li>
+<li><a href="#org905165c">4.4. 4. 打开演示</a></li>
 </ul>
 </li>
-<li><a href="#org47e6a90">5. HTTP API</a>
+<li><a href="#org43059e2">5. HTTP API</a>
 <ul>
-<li><a href="#orgab93b13">5.1. <code>POST /api/v1/predict</code></a></li>
+<li><a href="#orgeb29e51">5.1. <code>POST /api/v1/predict</code></a></li>
 </ul>
 </li>
-<li><a href="#org7e06f7d">6. 前端 SDK</a></li>
-<li><a href="#org00e183b">7. MCP 配置说明</a></li>
-<li><a href="#org1aac6a4">8. 预测逻辑摘要（后端）</a></li>
-<li><a href="#org21a7e0d">9. 常见问题</a></li>
-<li><a href="#org63c646c">10. 许可与声明</a></li>
+<li><a href="#org7727073">6. 前端 SDK</a></li>
+<li><a href="#org1cb67a8">7. MCP 配置说明</a></li>
+<li><a href="#orgd5958d5">8. 预测逻辑摘要（后端）</a></li>
+<li><a href="#orgfde2175">9. 常见问题</a></li>
+<li><a href="#org4769dd2">10. 许可与声明</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc335bcf" class="outline-2">
-<h2 id="orgc335bcf"><span class="section-number-2">1.</span> 简介</h2>
+<div id="outline-container-orgf4431d0" class="outline-2">
+<h2 id="orgf4431d0"><span class="section-number-2">1.</span> 简介</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Aiform 是一套「HTML 表单 + 后端预测」的演示工程：<br />
@@ -254,8 +254,8 @@ Aiform 是一套「HTML 表单 + 后端预测」的演示工程：<br />
 </p>
 </div>
 </div>
-<div id="outline-container-org60be68e" class="outline-2">
-<h2 id="org60be68e"><span class="section-number-2">2.</span> 仓库结构</h2>
+<div id="outline-container-orgbef820c" class="outline-2">
+<h2 id="orgbef820c"><span class="section-number-2">2.</span> 仓库结构</h2>
 <div class="outline-text-2" id="text-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -300,8 +300,8 @@ Aiform 是一套「HTML 表单 + 后端预测」的演示工程：<br />
 </table>
 </div>
 </div>
-<div id="outline-container-orgf19d505" class="outline-2">
-<h2 id="orgf19d505"><span class="section-number-2">3.</span> 环境要求</h2>
+<div id="outline-container-org3bb5a99" class="outline-2">
+<h2 id="org3bb5a99"><span class="section-number-2">3.</span> 环境要求</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>*Python*：建议 3.12（与已验证依赖一致；3.10+ 一般亦可）。<br /></li>
@@ -309,12 +309,12 @@ Aiform 是一套「HTML 表单 + 后端预测」的演示工程：<br />
 </ul>
 </div>
 </div>
-<div id="outline-container-orgad23547" class="outline-2">
-<h2 id="orgad23547"><span class="section-number-2">4.</span> 快速开始</h2>
+<div id="outline-container-orgb05889b" class="outline-2">
+<h2 id="orgb05889b"><span class="section-number-2">4.</span> 快速开始</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org90c6fc4" class="outline-3">
-<h3 id="org90c6fc4"><span class="section-number-3">4.1.</span> 1. 安装依赖</h3>
+<div id="outline-container-orgd1b0dec" class="outline-3">
+<h3 id="orgd1b0dec"><span class="section-number-3">4.1.</span> 1. 安装依赖</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-bash"><code><span style="color: #cd9575;">cd</span> backend
@@ -335,8 +335,8 @@ pip install -r requirements.txt
 </div>
 </div>
 </div>
-<div id="outline-container-orgb8aa198" class="outline-3">
-<h3 id="orgb8aa198"><span class="section-number-3">4.2.</span> 2. 配置环境变量</h3>
+<div id="outline-container-orgb57bd03" class="outline-3">
+<h3 id="orgb57bd03"><span class="section-number-3">4.2.</span> 2. 配置环境变量</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 复制示例文件并编辑：<br />
@@ -430,19 +430,19 @@ pip install -r requirements.txt
 </table>
 </div>
 </div>
-<div id="outline-container-org04ccaee" class="outline-3">
-<h3 id="org04ccaee"><span class="section-number-3">4.3.</span> 3. 启动服务</h3>
+<div id="outline-container-orgaac2d9e" class="outline-3">
+<h3 id="orgaac2d9e"><span class="section-number-3">4.3.</span> 3. 启动服务</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-bash"><code><span style="color: #cd9575;">cd</span> backend
-source .venv/bin/activate
+source .venv/bin/activate.fish
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 </code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc1382e0" class="outline-3">
-<h3 id="orgc1382e0"><span class="section-number-3">4.4.</span> 4. 打开演示</h3>
+<div id="outline-container-org905165c" class="outline-3">
+<h3 id="org905165c"><span class="section-number-3">4.4.</span> 4. 打开演示</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 浏览器访问：<a href="http://127.0.0.1:8000/demo">http://127.0.0.1:8000/demo</a><br />
@@ -454,12 +454,12 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 </div>
 </div>
 </div>
-<div id="outline-container-org47e6a90" class="outline-2">
-<h2 id="org47e6a90"><span class="section-number-2">5.</span> HTTP API</h2>
+<div id="outline-container-org43059e2" class="outline-2">
+<h2 id="org43059e2"><span class="section-number-2">5.</span> HTTP API</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgab93b13" class="outline-3">
-<h3 id="orgab93b13"><span class="section-number-3">5.1.</span> <code>POST /api/v1/predict</code></h3>
+<div id="outline-container-orgeb29e51" class="outline-3">
+<h3 id="orgeb29e51"><span class="section-number-3">5.1.</span> <code>POST /api/v1/predict</code></h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 请求体（JSON）主要字段：<br />
@@ -487,8 +487,8 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 </div>
 </div>
 </div>
-<div id="outline-container-org7e06f7d" class="outline-2">
-<h2 id="org7e06f7d"><span class="section-number-2">6.</span> 前端 SDK</h2>
+<div id="outline-container-org7727073" class="outline-2">
+<h2 id="org7727073"><span class="section-number-2">6.</span> 前端 SDK</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 在页面中引入（需与后端同源或通过 CORS 访问 API）：<br />
@@ -531,8 +531,8 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 </div>
 </div>
 </div>
-<div id="outline-container-org00e183b" class="outline-2">
-<h2 id="org00e183b"><span class="section-number-2">7.</span> MCP 配置说明</h2>
+<div id="outline-container-org1cb67a8" class="outline-2">
+<h2 id="org1cb67a8"><span class="section-number-2">7.</span> MCP 配置说明</h2>
 <div class="outline-text-2" id="text-7">
 <ol class="org-ol">
 <li>参考仓库根目录 <code>mcp_connections.example.json=，按本机 MySQL MCP 启动方式填写 =command</code> / =args=（或其它 transport）。<br /></li>
@@ -545,8 +545,8 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 </p>
 </div>
 </div>
-<div id="outline-container-org1aac6a4" class="outline-2">
-<h2 id="org1aac6a4"><span class="section-number-2">8.</span> 预测逻辑摘要（后端）</h2>
+<div id="outline-container-orgd5958d5" class="outline-2">
+<h2 id="orgd5958d5"><span class="section-number-2">8.</span> 预测逻辑摘要（后端）</h2>
 <div class="outline-text-2" id="text-8">
 <ol class="org-ol">
 <li>根据 <code>user_id</code> 与 <code>user_id_column=，查询该用户在 =database.table</code> 中最近至多 <b>10</b> 条记录。<br /></li>
@@ -555,8 +555,8 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 </ol>
 </div>
 </div>
-<div id="outline-container-org21a7e0d" class="outline-2">
-<h2 id="org21a7e0d"><span class="section-number-2">9.</span> 常见问题</h2>
+<div id="outline-container-orgfde2175" class="outline-2">
+<h2 id="orgfde2175"><span class="section-number-2">9.</span> 常见问题</h2>
 <div class="outline-text-2" id="text-9">
 <dl class="org-dl">
 <dt><b>演示页跨域</b></dt><dd>若静态页不在 uvicorn 同一端口，需配置 =CORS_ORIGINS=（逗号分隔）或使用反向代理同源。<br /></dd>
@@ -565,8 +565,8 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 </dl>
 </div>
 </div>
-<div id="outline-container-org63c646c" class="outline-2">
-<h2 id="org63c646c"><span class="section-number-2">10.</span> 许可与声明</h2>
+<div id="outline-container-org4769dd2" class="outline-2">
+<h2 id="org4769dd2"><span class="section-number-2">10.</span> 许可与声明</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 演示代码仅供学习与联调；生产环境请自行加固鉴权、SQL 注入防护与密钥管理。<br />
@@ -577,7 +577,7 @@ SDK 静态地址：<a href="http://127.0.0.1:8000/sdk/aiform-sdk.js">http://127.
 <div id="postamble" class="status">
 <p class="date">Date: 2026-05-03 Sun 08:35</p>
 <p class="author">Author: van</p>
-<p class="date">Created: 2026-05-05 Tue 20:33</p>
+<p class="date">Created: 2026-05-06 Wed 13:37</p>
 </div>
 </body>
 </html>

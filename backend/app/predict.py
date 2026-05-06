@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import time
 from typing import Any
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -50,6 +51,7 @@ def _example_for_fields(field_names: list[str]) -> str:
 
 
 async def predict_form(settings: Settings, req: PredictRequest) -> PredictResponse:
+    t0 = time.perf_counter()
     field_names = [f.name for f in req.fields]
     history, source = await fetch_user_recent_rows(
         settings,
@@ -60,6 +62,13 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         order_column=req.order_by_column,
         limit=10,
         columns=field_names,
+    )
+    t1 = time.perf_counter()
+    logger.info(
+        "predict 耗时: 拉取历史/MCP路径=%.3fs rows=%d source=%s",
+        t1 - t0,
+        len(history),
+        source,
     )
     filled = {k: v for k, v in req.current_values.items() if v not in (None, "")}
     field_prompts = {f.name: f.prompt for f in req.fields if f.prompt}
@@ -111,7 +120,14 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
     )
     logger.info("LLM 请求 system: %s", sys.content)
     logger.info("LLM 请求 human: %s", human.content)
+    t_llm = time.perf_counter()
     msg = await llm.ainvoke([sys, human])
+    t_after_llm = time.perf_counter()
+    logger.info(
+        "predict 耗时: 大模型 ainvoke=%.3fs model=%s",
+        t_after_llm - t_llm,
+        settings.openai_model,
+    )
     logger.info("LLM 返回: %s", msg.content)
     content = msg.content
     if not isinstance(content, str):
@@ -126,6 +142,12 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         merged[str(k)] = _as_str_or_none(v)
     for k in filled:
         merged.pop(k, None)
+
+    logger.info(
+        "predict 耗时: 解析与组装=%.3fs predict_form 全程=%.3fs",
+        time.perf_counter() - t_after_llm,
+        time.perf_counter() - t0,
+    )
 
     return PredictResponse(
         fields=merged,

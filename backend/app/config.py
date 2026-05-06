@@ -25,7 +25,7 @@ class Settings(BaseSettings):
         description="默认同 DeepSeek；使用官方 OpenAI 时请设为 https://api.openai.com/v1",
     )
     openai_model: str = Field(
-        default="deepseek-v4-pro",
+        default="deepseek-v4-flash",
         validation_alias=AliasChoices("OPENAI_MODEL", "DEEPSEEK_MODEL"),
     )
 
