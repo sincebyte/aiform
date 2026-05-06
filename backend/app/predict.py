@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 import json
 import logging
 import re
@@ -46,8 +47,29 @@ EXAMPLE_RESPONSE = """
 
 
 def _example_for_fields(field_names: list[str]) -> str:
-    sample = {n: f"<{n} 的预测字符串>" for n in field_names[:8]}
+    sample = {n: f"" for n in field_names[:8]}
     return json.dumps({"fields": sample}, ensure_ascii=False, indent=2)
+
+
+def _deepseek_extra_body_no_thinking(base_url: str) -> dict[str, Any] | None:
+    """DeepSeek V4 默认开启思考模式；关闭时需在请求体中附带 thinking（见官方 Thinking Mode 文档）。"""
+    if "deepseek" not in (base_url or "").lower():
+        return None
+    return {"thinking": {"type": "disabled"}}
+
+
+@functools.lru_cache(maxsize=8)
+def _predict_llm(model: str, base_url: str, api_key: str) -> ChatOpenAI:
+    """同一进程内按 endpoint/模型/密钥复用 HTTP 客户端。"""
+    bu = base_url or None
+    return ChatOpenAI(
+        model=model,
+        api_key=SecretStr(api_key),
+        base_url=bu,
+        temperature=0.2,
+        timeout=60,
+        extra_body=_deepseek_extra_body_no_thinking(base_url or ""),
+    )
 
 
 async def predict_form(settings: Settings, req: PredictRequest) -> PredictResponse:
@@ -60,7 +82,7 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         user_column=req.user_id_column,
         user_id=req.user_id,
         order_column=req.order_by_column,
-        limit=10,
+        limit=3,
         columns=field_names,
     )
     t1 = time.perf_counter()
@@ -111,12 +133,10 @@ async def predict_form(settings: Settings, req: PredictRequest) -> PredictRespon
         raise RuntimeError("服务端未配置 DEEPSEEK_API_KEY（或 OPENAI_API_KEY）")
 
 
-    llm = ChatOpenAI(
-        model=settings.openai_model,
-        api_key=SecretStr(settings.openai_api_key),
-        base_url=settings.openai_base_url or None,
-        temperature=0.2,
-        timeout=60,
+    llm = _predict_llm(
+        settings.openai_model,
+        settings.openai_base_url or "",
+        settings.openai_api_key,
     )
     logger.info("LLM 请求 system: %s", sys.content)
     logger.info("LLM 请求 human: %s", human.content)
